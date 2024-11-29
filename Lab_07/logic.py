@@ -7,8 +7,8 @@ class Car:
         self.car_type = car_type
         self.engine_capacity = engine_capacity
         self.parked = False
-        self.total_fee = 0  # Suma opłat dla tego pojazdu
-        self.history = []  # List of tuples: [(start_time, end_time, fee), ...]
+        self.total_fee = 0
+        self.history = []  # List of tuples: (start_time, end_time, fee)
 
     def park_in(self, parking):
         if not self.parked:
@@ -17,7 +17,7 @@ class Car:
                 self.parked = True
                 self.start_time = QDateTime.currentDateTime()
         else:
-            print(f"The car with this plate {self.plate_number} is already on the parking")
+            print(f"Car with this plate {self.plate_number} is already on the parking.")
 
     def park_out(self, parking):
         if self.parked:
@@ -29,7 +29,7 @@ class Car:
             parking.remove_car(self, fee, self)
             self.parked = False
         else:
-            print(f"Samochód {self.plate_number} nie jest na parkingu.")
+            print(f"Car with this plate {self.plate_number} is not on the parking.")
 
 class Parking:
     def __init__(self):
@@ -37,7 +37,7 @@ class Parking:
         self.occupied_spaces = 0
         self.income = 0
         self.cars = []  # List of parked cars
-        self.global_history = []  # Historia całego parkingu
+        self.global_history = []
 
     def add_car(self, car):
         if self.occupied_spaces < self.total_number_of_places:
@@ -53,7 +53,6 @@ class Parking:
             self.cars.remove(car)
             self.occupied_spaces -= 1
             self.income += fee
-            # Zapisujemy historię globalną
             self.global_history.append(
                 (vehicle.plate_number, car.start_time, QDateTime.currentDateTime(), fee)
             )
@@ -65,6 +64,6 @@ class Parking:
             "jednoślad": 5
         }
         rate = rate_per_hour.get(car_type, 0)
-        units = (duration + 9) // 10 
+        units = (duration + 9) // 10
         if units == 0: units = 1
         return rate * units
