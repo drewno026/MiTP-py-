@@ -1,4 +1,23 @@
-class Parking():
+class Car:
+    parked = False
+    def __init__(self, plate_number, color, car_type):
+        self.plate_number = plate_number
+        self.color = color
+        self.car_type = car_type
+    def park_in(self, parking):
+        if self.parked == False:
+            parking.add_car(self)
+            self.parked = True
+    def park_out(self, parking):
+        if self.parked == True:
+            parking.remove_car(self)
+            self.parked = False
+    def car_report(self):
+        print("Plate number: ", self.plate_number)
+        print("Color: ", self.color)
+        print("Car type: ", self.car_type)
+        
+class Parking:
     def __init__(self, total_number_of_places):
         self.total_number_of_places = total_number_of_places
         self.free_places = self.total_number_of_places
@@ -48,25 +67,6 @@ class Parking():
         print("Number of occupied places: ", self.total_number_of_places - self.free_places)
     def report_revenue(self):
         print("Current revenue is equal: ", self.parking_revenue, "PLN")
-
-class Car():
-    parked = False
-    def __init__(self, plate_number, color, car_type):
-        self.plate_number = plate_number
-        self.color = color
-        self.car_type = car_type
-    def park_in(self, parking):
-        if self.parked == False:
-            parking.add_car(self)
-            self.parked = True
-    def park_out(self, parking):
-        if self.parked == True:
-            parking.remove_car(self)
-            self.parked = False
-    def car_report(self):
-        print("Plate number: ", self.plate_number)
-        print("Color: ", self.color)
-        print("Car type: ", self.car_type)
 
 def test_parking():
     parking_w = Parking(5)
