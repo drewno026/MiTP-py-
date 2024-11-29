@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QIntValidator
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
-                             QHBoxLayout, QPushButton, QLabel, QLineEdit,
+                             QHBoxLayout, QPushButton, QLabel, QLineEdit, QSizePolicy,
                              QComboBox, QTableWidget, QTableWidgetItem, QMessageBox, QTextEdit, QScrollArea)
 from logic import Car, Parking
 import sys
@@ -59,13 +59,20 @@ class ParkingGUI(QMainWindow):
 
         main_layout.addWidget(self.vehicle_fee_label)
         main_layout.addWidget(self.vehicle_history_label)
+
+        self.table.horizontalHeader().setStyleSheet("QHeaderView::section {background-color: lightblue; border: 1px solid black; }")
+        self.table.setStyleSheet("QHeaderView::section { background-color: lightblue; color: black; }")
+
         # Buttons
         button_layout = QHBoxLayout()
         self.enter_button = QPushButton("Park in")
+        self.enter_button.setStyleSheet("border: 1px solid black;")
         self.enter_button.clicked.connect(self.park_car)
         self.leave_button = QPushButton("Park out")
+        self.leave_button.setStyleSheet("border: 1px solid black;")
         self.leave_button.clicked.connect(self.unpark_car)
         self.remove_button = QPushButton("Remove vehicle")
+        self.remove_button.setStyleSheet("border: 1px solid black;")
         self.remove_button.clicked.connect(self.remove_car)
 
         button_layout.addWidget(self.enter_button)
@@ -77,7 +84,6 @@ class ParkingGUI(QMainWindow):
         # Income label
         self.income_label = QLabel("Income: 0")
         main_layout.addWidget(self.income_label)
-
         # Global history
         self.global_history_label = QLabel("Parking history:")
         self.global_history_text = QTextEdit()
@@ -86,6 +92,7 @@ class ParkingGUI(QMainWindow):
         self.global_history_area = QScrollArea()
         self.global_history_area.setWidget(self.global_history_text)
         self.global_history_area.setWidgetResizable(True)
+        self.global_history_area.setFixedSize(600, 100)
 
         main_layout.addWidget(self.global_history_label)
         main_layout.addWidget(self.global_history_area)
@@ -94,19 +101,6 @@ class ParkingGUI(QMainWindow):
         container = QWidget()
         container.setLayout(main_layout)
         self.setCentralWidget(container)
-        self.table.horizontalHeader().setStyleSheet("""
-            QHeaderView::section {
-                background-color: lightblue; 
-                color: black; 
-                border: 1px solid black; 
-            }
-        """)
-        self.table.setStyleSheet("""
-            QHeaderView::section {
-                background-color: lightblue;
-                color: black;
-            }
-        """)
 
     def add_car(self):
         plate = self.plate_input.text()
@@ -118,7 +112,6 @@ class ParkingGUI(QMainWindow):
             QMessageBox.warning(self, "Error", "Please complete all fields")
             return
 
-        # Check for duplicate plate numbers
         if any(car.plate_number == plate for car in self.cars):
             QMessageBox.warning(self, "Error", f"Vehicle with this '{plate}' number plate already exists")
             return
@@ -163,11 +156,9 @@ class ParkingGUI(QMainWindow):
     def show_history_and_fees(self, row):
         car = self.cars[row]
 
-        # Display total fees for the selected car
         self.vehicle_fee_label.setText(f"All fees: {car.total_fee:.2f}")
         self.vehicle_fee_label.show()
 
-        # Display parking history for the selected car
         history = "\n".join([f"From: {start.toString()} To: {end.toString()} Fee: {fee:.2f}"
                              for start, end, fee in car.history])
         if not history:
@@ -189,7 +180,6 @@ class ParkingGUI(QMainWindow):
         history = "\n".join([f"Number plate: {plate}, From: {start.toString()} To: {end.toString()}, Fee: {fee:.2f}"
                              for plate, start, end, fee in self.parking.global_history])
         self.global_history_text.setText(history)
-
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
