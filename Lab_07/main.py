@@ -97,7 +97,7 @@ class ParkingGUI(QMainWindow):
     def add_car(self):
         plate = self.plate_input.text()
         color = self.color_input.text()
-        vehicle_type = self.type_input.currentText()
+        car_type = self.type_input.currentText()
         capacity = self.capacity_input.text()
 
         if not plate or not color or not capacity:
@@ -109,7 +109,7 @@ class ParkingGUI(QMainWindow):
             QMessageBox.warning(self, "Błąd", f"Pojazd z numerem rejestracyjnym {plate} już istnieje!")
             return
 
-        car = Car(plate, color, vehicle_type, capacity)
+        car = Car(plate, color, car_type, capacity)
         self.cars.append(car)
         self.update_table()
 
@@ -120,7 +120,7 @@ class ParkingGUI(QMainWindow):
             return
 
         car = self.cars[row]
-        car.parking_entry(self.parking)
+        car.park_in(self.parking)
         self.update_table()
 
     def unpark_car(self):
@@ -130,7 +130,7 @@ class ParkingGUI(QMainWindow):
             return
 
         car = self.cars[row]
-        car.parking_leave(self.parking)
+        car.park_out(self.parking)
         self.update_table()
         self.income_label.setText(f"Przychód: {self.parking.income:.2f}")
         self.update_global_history()
@@ -166,7 +166,7 @@ class ParkingGUI(QMainWindow):
         for i, car in enumerate(self.cars):
             self.table.setItem(i, 0, QTableWidgetItem(car.plate_number))
             self.table.setItem(i, 1, QTableWidgetItem(car.color))
-            self.table.setItem(i, 2, QTableWidgetItem(car.vehicle_type))
+            self.table.setItem(i, 2, QTableWidgetItem(car.car_type))
             self.table.setItem(i, 3, QTableWidgetItem(car.engine_capacity))
             self.table.setItem(i, 4, QTableWidgetItem("Tak" if car.parked else "Nie"))
             self.table.setItem(i, 5, QTableWidgetItem(f"{car.total_fee:.2f}"))

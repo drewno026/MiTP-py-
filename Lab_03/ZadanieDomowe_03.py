@@ -16,7 +16,7 @@ class Car:
         print("Plate number: ", self.plate_number)
         print("Color: ", self.color)
         print("Car type: ", self.car_type)
-        
+
 class Parking:
     def __init__(self, total_number_of_places):
         self.total_number_of_places = total_number_of_places

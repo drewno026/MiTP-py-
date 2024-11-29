@@ -1,29 +1,29 @@
 from PyQt5.QtCore import QDateTime
 
 class Car:
-    def __init__(self, plate_number, color, vehicle_type, engine_capacity):
+    def __init__(self, plate_number, color, car_type, engine_capacity):
         self.plate_number = plate_number
         self.color = color
-        self.vehicle_type = vehicle_type
+        self.car_type = car_type
         self.engine_capacity = engine_capacity
         self.parked = False
         self.total_fee = 0  # Suma opłat dla tego pojazdu
         self.history = []  # List of tuples: [(start_time, end_time, fee), ...]
 
-    def parking_entry(self, parking):
+    def park_in(self, parking):
         if not self.parked:
             success = parking.add_car(self)
             if success:
                 self.parked = True
                 self.start_time = QDateTime.currentDateTime()
         else:
-            print(f"Samochód {self.plate_number} jest już na parkingu.")
+            print(f"The car with this plate {self.plate_number} is already on the parking")
 
-    def parking_leave(self, parking):
+    def park_out(self, parking):
         if self.parked:
             end_time = QDateTime.currentDateTime()
             duration = self.start_time.secsTo(end_time)
-            fee = parking.calculate_fee(self.vehicle_type, duration)
+            fee = parking.calculate_fee(self.car_type, duration)
             self.total_fee += fee
             self.history.append((self.start_time, end_time, fee))
             parking.remove_car(self, fee, self)
@@ -33,19 +33,19 @@ class Car:
 
 class Parking:
     def __init__(self):
-        self.total_number_of_spaces = 5
+        self.total_number_of_places = 5
         self.occupied_spaces = 0
         self.income = 0
         self.cars = []  # List of parked cars
         self.global_history = []  # Historia całego parkingu
 
     def add_car(self, car):
-        if self.occupied_spaces < self.total_number_of_spaces:
+        if self.occupied_spaces < self.total_number_of_places:
             self.occupied_spaces += 1
             self.cars.append(car)
             return True
         else:
-            print("Parking jest pełny")
+            print("Parking is full")
             return False
 
     def remove_car(self, car, fee, vehicle):
@@ -58,14 +58,13 @@ class Parking:
                 (vehicle.plate_number, car.start_time, QDateTime.currentDateTime(), fee)
             )
 
-    def calculate_fee(self, vehicle_type, duration):
+    def calculate_fee(self, car_type, duration):
         rate_per_hour = {
             "osobowy": 10,
             "ciężarowy": 30,
             "jednoślad": 5
         }
-        rate = rate_per_hour.get(vehicle_type, 0)
-        # Dzielimy czas na segmenty 10-sekundowe
-        units = (duration + 9) // 10  # zaokrąglamy w górę
+        rate = rate_per_hour.get(car_type, 0)
+        units = (duration + 9) // 10 
         if units == 0: units = 1
         return rate * units
