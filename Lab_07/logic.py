@@ -36,7 +36,7 @@ class Parking:
         self.total_number_of_places = 5
         self.occupied_spaces = 0
         self.income = 0
-        self.cars = []  # List of parked cars
+        self.cars = []
         self.global_history = []
 
     def add_car(self, car):
@@ -59,9 +59,9 @@ class Parking:
 
     def calculate_fee(self, car_type, duration):
         rate_per_hour = {
-            "osobowy": 10,
-            "ciężarowy": 30,
-            "jednoślad": 5
+            "car": 10,
+            "truck": 30,
+            "two wheeler": 5
         }
         rate = rate_per_hour.get(car_type, 0)
         units = (duration + 9) // 10

@@ -51,7 +51,7 @@ class ParkingGUI(QMainWindow):
 
         main_layout.addWidget(self.table)
 
-        # Vehicle details (initially hidden)
+        # Vehicle details
         self.vehicle_fee_label = QLabel("Total vehicle fees: 0")
         self.vehicle_fee_label.hide()
         self.vehicle_history_label = QLabel("Parking history:")
@@ -59,6 +59,20 @@ class ParkingGUI(QMainWindow):
 
         main_layout.addWidget(self.vehicle_fee_label)
         main_layout.addWidget(self.vehicle_history_label)
+        # Buttons
+        button_layout = QHBoxLayout()
+        self.enter_button = QPushButton("Park in")
+        self.enter_button.clicked.connect(self.park_car)
+        self.leave_button = QPushButton("Park out")
+        self.leave_button.clicked.connect(self.unpark_car)
+        self.remove_button = QPushButton("Remove vehicle")
+        self.remove_button.clicked.connect(self.remove_car)
+
+        button_layout.addWidget(self.enter_button)
+        button_layout.addWidget(self.leave_button)
+        button_layout.addWidget(self.remove_button)
+
+        main_layout.addLayout(button_layout)
 
         # Income label
         self.income_label = QLabel("Income: 0")
@@ -76,30 +90,15 @@ class ParkingGUI(QMainWindow):
         main_layout.addWidget(self.global_history_label)
         main_layout.addWidget(self.global_history_area)
 
-        # Buttons
-        button_layout = QHBoxLayout()
-        self.enter_button = QPushButton("Park in")
-        self.enter_button.clicked.connect(self.park_car)
-        self.leave_button = QPushButton("Park out")
-        self.leave_button.clicked.connect(self.unpark_car)
-        self.remove_button = QPushButton("Remove vehicle")
-        self.remove_button.clicked.connect(self.remove_car)
-
-        button_layout.addWidget(self.enter_button)
-        button_layout.addWidget(self.leave_button)
-        button_layout.addWidget(self.remove_button)
-
-        main_layout.addLayout(button_layout)
-
         # Main widget
         container = QWidget()
         container.setLayout(main_layout)
         self.setCentralWidget(container)
         self.table.horizontalHeader().setStyleSheet("""
             QHeaderView::section {
-                background-color: lightblue; /* Kolor tła nagłówków */
-                color: black; /* Kolor tekstu */
-                border: 1px solid black; /* Obramowanie nagłówków */
+                background-color: lightblue; 
+                color: black; 
+                border: 1px solid black; 
             }
         """)
         self.table.setStyleSheet("""
@@ -183,7 +182,7 @@ class ParkingGUI(QMainWindow):
             self.table.setItem(i, 1, QTableWidgetItem(car.color))
             self.table.setItem(i, 2, QTableWidgetItem(car.car_type))
             self.table.setItem(i, 3, QTableWidgetItem(car.engine_capacity))
-            self.table.setItem(i, 4, QTableWidgetItem("Tak" if car.parked else "Nie"))
+            self.table.setItem(i, 4, QTableWidgetItem("Yes" if car.parked else "No"))
             self.table.setItem(i, 5, QTableWidgetItem(f"{car.total_fee:.2f}"))
 
     def update_global_history(self):
